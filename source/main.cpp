@@ -1,8 +1,10 @@
 #include <iostream>
 #include <string>
+#include <cstring>
 #include <cstdlib>
 #include <fstream>
 #include <vector>
+#include <algorithm>
 
 using namespace std;
 
@@ -48,7 +50,21 @@ public:
 			else
 				ptr->isEnding = true;
 		}
+	}
 
+	bool contains(const string& str, int pos = 0)
+	{
+		Node* ptr = getNext(str[pos]);
+		if(ptr == nullptr)
+			return false;
+		else if(str.size()-1 == pos)
+		{
+			if(ptr->isEnding)
+				return true;
+			else return false;
+		}
+		else
+			return ptr->contains(str, pos+1);
 	}
 };
 
@@ -82,7 +98,7 @@ void loadDictionary(const string& filename)
 
 					break;
 				}
-				loaded_word.push_back(chr);
+				loaded_word.push_back(toupper(chr));
 			}
 			trie_root.AddWord(loaded_word);
 		}
@@ -91,12 +107,11 @@ void loadDictionary(const string& filename)
 		cerr << "Could not load the dictionary" << endl;
 }
 
-char board[4][4] = {{'L','A','J','I'}, 
-					{'K','C','O','N'}, 
-					{'Z','I','R','A'},
-					{'J','U','S','Z'}};
+wchar_t board[4][4] = {{'B','N','I','D'}, 
+					   {'H','E','Z','Z'}, 
+					   {'C','C','O','Y'},
+					   {'W','H','Ę','N'}};
 bool visited[4][4];
-int nums = 0;
 void DFS(int x, int y, string& head)
 {
 	if(x==-1 || x>3 || y==-1 || y>3 || head.size()>16)
@@ -115,11 +130,13 @@ void DFS(int x, int y, string& head)
 			}
 		}
 	}
-	//if(dict->check(head))
-	//{
-		cerr << head << endl;
-	//}
-	nums++;
+	if(trie_root.contains(head))
+	{
+		if(head.size() > 2)
+		{
+			cout << head << endl;
+		}
+	}
 	head.pop_back();
 	
 }
@@ -138,6 +155,6 @@ int main()
 			DFS(x,y,str);
 			visited[y][x] = false;
 		}
-	cout << nums << endl;
+
 	return 0;
 }
