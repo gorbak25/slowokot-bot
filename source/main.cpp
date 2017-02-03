@@ -9,8 +9,12 @@
 using namespace std;
 
 const int rowX[4] = {75, 180, 300, 400};
-
 const int rowY[4] = {400, 500, 600, 730};
+
+
+//const int rowX[4] = {150, 400, 680, 925};
+//const int rowY[4] = {850, 1100, 1350, 1600};
+
 
 void StartTouch()
 {
@@ -134,10 +138,10 @@ void loadDictionary(const string& filename)
 		cerr << "Could not load the dictionary" << endl;
 }
 
-unsigned short int board[4][4] = {{'b','n','y','u'}, 
-				     			  {'a','l','ć','m'}, 
-				     			  {'p','n','s','ź'},
-				     			  {'e','r','o','e'}};
+unsigned short int board[4][4] = {{'g','g','ż','ź'}, 
+				     			  {'k','u','ż','t'}, 
+				     			  {'i','n','k','y'},
+				     			  {'u','o','w','j'}};
 class SearchResult
 {
 public:
@@ -217,8 +221,20 @@ int main()
 			results.end(),
 			[](const SearchResult& a, const SearchResult& b)->bool
 			{
+				if(a.found.size() == b.found.size())
+				{
+					return a.found < b.found;
+				}
 				return a.found.size() > b.found.size();
 			});
+
+		for(auto it = results.begin(); it!=results.end(); it++)
+		{
+			if(it+1 == results.end())
+				break;
+			if((*it).found == (*(it+1)).found)
+				it = results.erase(it);
+		}
 
 		for(auto res : results)
 		{
